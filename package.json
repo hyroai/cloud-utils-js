@@ -1,0 +1,37 @@
+{
+  "name": "cloud-utils-js",
+  "version": "0.0.1",
+  "description": "Utils for using different cloud services",
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "npx babel src --watch --out-dir dist",
+    "build": "babel src --out-dir dist",
+    "test": "jest"
+  },
+  "engines": {
+    "node": ">=12.14"
+  },
+  "keywords": [],
+  "author": "Erez Haim",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hyroai/cloud-utils-js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/hyroai/cloud-utils-js/issues"
+  },
+  "homepage": "https://github.com/hyroai/cloud-utils-js/",
+  "dependencies": {
+    "@azure/storage-blob": "^12.2.0-preview.1",
+    "@google-cloud/storage": "^5.1.2",
+    "azure-storage": "^2.10.3"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.8.3",
+    "@babel/core": "^7.8.3",
+    "@babel/preset-env": "^7.8.3",
+    "jest": "^25.1.0",
+    "prettier": "^1.19.1"
+  }
+}
