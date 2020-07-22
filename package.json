@@ -1,6 +1,6 @@
 {
   "name": "cloud-utils-js",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Utils for using different cloud services",
   "main": "dist/index.js",
   "scripts": {
@@ -25,6 +25,7 @@
   "dependencies": {
     "@azure/storage-blob": "^12.2.0-preview.1",
     "@google-cloud/storage": "^5.1.2",
+    "aws-sdk": "^2.717.0",
     "azure-storage": "^2.10.3"
   },
   "devDependencies": {
