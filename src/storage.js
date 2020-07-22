@@ -122,35 +122,33 @@ const storageService = (provider, connectionString) => {
       throw new Error("createWriteStream is not supported for AWS");
     };
 
-    const getSignedUrl = (bucketName, fileName) => {
-      return new Promise((resolve, reject) => {
+    const getSignedUrl = (bucketName, fileName) =>
+      new Promise((resolve, reject) => {
         resolve(s3.getSignedUrl('getObject', {
           Bucket: bucketName,
           Key: fileName,
           Expires: 60 * 5
         }))
       });
-    };
 
-    const downloadFileAsJson = (bucketName, fileName) => {
-      return new Promise((resolve, reject) => {
-        try {
-          s3.getObject({
-            Bucket: bucketName,
-            Key: fileName
-          }, (err, data) => {
-            if (err) return reject(err);
+    const downloadFileAsJson = (bucketName, fileName) =>
+      new Promise((resolve, reject) => {
+        s3.getObject({
+          Bucket: bucketName,
+          Key: fileName
+        }, (err, data) => {
+          if (err) return reject(err);
+          try {
             resolve(JSON.parse(data.Body.toString()))
-          });
-        } catch (e) {
-          reject("File is not in JSON format");
-        }
+          } catch (e) {
+            reject("File is not in JSON format");
+          }
+        });
       });
-    };
 
 
-    const uploadJsonBlob = (container, blobName, payload) => {
-      return new Promise((resolve, reject) => {
+    const uploadJsonBlob = (container, blobName, payload) =>
+      new Promise((resolve, reject) => {
         try {
 
           s3.upload({
@@ -165,7 +163,6 @@ const storageService = (provider, connectionString) => {
           reject("Payload is not in JSON format");
         }
       });
-    };
 
     return {
       downloadFileAsJson: downloadFileAsJson,
