@@ -123,16 +123,16 @@ const storageService = (provider, connectionString) => {
     };
 
     const getSignedUrl = (bucketName, fileName) =>
-      new Promise((resolve, reject) => {
+      new Promise((resolve, reject) =>
         resolve(s3.getSignedUrl('getObject', {
           Bucket: bucketName,
           Key: fileName,
           Expires: 60 * 5
         }))
-      });
+      );
 
     const downloadFileAsJson = (bucketName, fileName) =>
-      new Promise((resolve, reject) => {
+      new Promise((resolve, reject) =>
         s3.getObject({
           Bucket: bucketName,
           Key: fileName
@@ -143,14 +143,13 @@ const storageService = (provider, connectionString) => {
           } catch (e) {
             reject("File is not in JSON format");
           }
-        });
-      });
+        })
+      );
 
 
     const uploadJsonBlob = (container, blobName, payload) =>
       new Promise((resolve, reject) => {
         try {
-
           s3.upload({
             Bucket: container,
             Key: blobName,
