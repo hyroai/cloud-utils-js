@@ -2,6 +2,7 @@ const { Storage } = require("@google-cloud/storage");
 // Using azure legacy (v2) API for WriteStream since it's not available in current (v12)
 const azure = require("azure-storage");
 const { BlobServiceClient } = require("@azure/storage-blob");
+const moment = require("moment");
 
 const storageService = (provider, connectionString) => {
   const makeGcpStorage = () => {
