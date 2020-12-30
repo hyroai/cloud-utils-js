@@ -52,6 +52,22 @@ const downloadFileAsJson = ({ blobServiceClient }) => async (
   }
 };
 
+const getBlobStream = ({ blobServiceClient }) => async (
+  bucketName,
+  fileName
+) => {
+  const downloadResponse = await blobServiceClient
+    .getContainerClient(bucketName)
+    .getBlockBlobClient(fileName)
+    .download(0);
+
+  return {
+    stream: downloadResponse.readableStreamBody,
+    contentType: downloadResponse.contentType,
+    contentEncoding: downloadResponse.contentEncoding
+  };
+};
+
 const createWriteStream = ({ blobService }) => (bucketName, fileName) =>
   blobService.createWriteStreamToBlockBlob(bucketName, fileName);
 
@@ -72,7 +88,8 @@ module.exports = connectionString =>
     downloadFileAsJson,
     getSignedUrl,
     createWriteStream,
-    uploadJsonBlob
+    uploadJsonBlob,
+    getBlobStream
   })({
     blobService: azure.createBlobService(connectionString),
     blobServiceClient: BlobServiceClient.fromConnectionString(connectionString)
