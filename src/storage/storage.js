@@ -4,7 +4,7 @@ const storageService = (provider, connectionString) => {
   const providerMap = {
     azure: require("./azure"),
     gcp: require("./gcp"),
-    aws: require("./aws")
+    aws: require("./aws"),
   };
 
   return providerMap[provider](connectionString);

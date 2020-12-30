@@ -5,23 +5,23 @@ const createWriteStream = () => () => {
   throw new Error("createWriteStream is not supported for AWS");
 };
 
-const getSignedUrl = s3 => (bucketName, fileName) =>
-  new Promise(resolve =>
+const getSignedUrl = (s3) => (bucketName, fileName) =>
+  new Promise((resolve) =>
     resolve(
       s3.getSignedUrl("getObject", {
         Bucket: bucketName,
         Key: fileName,
-        Expires: 60 * 5
+        Expires: 60 * 5,
       })
     )
   );
 
-const downloadFileAsJson = s3 => (bucketName, fileName) =>
+const downloadFileAsJson = (s3) => (bucketName, fileName) =>
   new Promise((resolve, reject) =>
     s3.getObject(
       {
         Bucket: bucketName,
-        Key: fileName
+        Key: fileName,
       },
       (err, data) => {
         if (err) return reject(err);
@@ -34,14 +34,14 @@ const downloadFileAsJson = s3 => (bucketName, fileName) =>
     )
   );
 
-const uploadJsonBlob = s3 => (container, blobName, payload) =>
+const uploadJsonBlob = (s3) => (container, blobName, payload) =>
   new Promise((resolve, reject) => {
     try {
       s3.upload(
         {
           Bucket: container,
           Key: blobName,
-          Body: JSON.stringify(payload)
+          Body: JSON.stringify(payload),
         },
         (err, data) => {
           if (err) return reject(err);
@@ -58,5 +58,5 @@ module.exports = () =>
     downloadFileAsJson,
     getSignedUrl,
     createWriteStream,
-    uploadJsonBlob
+    uploadJsonBlob,
   })(new AWS.S3());

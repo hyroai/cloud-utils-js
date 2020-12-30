@@ -6,8 +6,7 @@
   "scripts": {
     "start": "npx babel src --watch --out-dir dist",
     "build": "babel src --out-dir dist",
-    "test": "jest",
-    "posttest": "eslint ."
+    "test": "eslint ."
   },
   "engines": {
     "node": ">=12.14"
