@@ -6,7 +6,8 @@
   "scripts": {
     "start": "npx babel src --watch --out-dir dist",
     "build": "babel src --out-dir dist",
-    "test": "jest"
+    "test": "jest",
+    "posttest": "eslint ."
   },
   "engines": {
     "node": ">=12.14"
@@ -27,12 +28,16 @@
     "@google-cloud/storage": "^5.1.2",
     "aws-sdk": "^2.717.0",
     "azure-storage": "^2.10.3",
-    "moment": "^2.29.1"
+    "moment": "^2.29.1",
+    "ramda": "^0.27.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.3",
     "@babel/core": "^7.8.3",
     "@babel/preset-env": "^7.8.3",
+    "eslint": "^7.9.0",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-jest": "^24.0.2",
     "jest": "^25.1.0",
     "prettier": "^1.19.1"
   }
