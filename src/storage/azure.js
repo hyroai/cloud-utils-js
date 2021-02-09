@@ -3,10 +3,10 @@ const { BlobServiceClient } = require("@azure/storage-blob");
 const moment = require("moment");
 const { applySpec } = require("ramda");
 
-const streamToString = readableStream =>
+const streamToString = (readableStream) =>
   new Promise((resolve, reject) => {
     const chunks = [];
-    readableStream.on("data", data => {
+    readableStream.on("data", (data) => {
       chunks.push(data.toString());
     });
     readableStream.on("end", () => {
@@ -20,10 +20,8 @@ const getSignedUrl = ({ blobService }) => (bucketName, fileName) => {
     AccessPolicy: {
       Permissions: azure.BlobUtilities.SharedAccessPermissions.READ,
       Start: moment().toDate(),
-      Expiry: moment()
-        .add(2, "h")
-        .toDate()
-    }
+      Expiry: moment().add(2, "h").toDate(),
+    },
   };
 
   const sasToken = blobService.generateSharedAccessSignature(
@@ -46,7 +44,7 @@ const downloadFileAsJson = ({ blobServiceClient }) => async (
   try {
     return await streamToString(
       downloadResponse.readableStreamBody
-    ).then(data => JSON.parse(data));
+    ).then((data) => JSON.parse(data));
   } catch (e) {
     return Promise.reject("File is not in JSON format");
   }
@@ -59,7 +57,7 @@ const getBlobStream = ({ blobServiceClient }) => async (
   const {
     readableStreamBody,
     contentType,
-    contentEncoding
+    contentEncoding,
   } = await blobServiceClient
     .getContainerClient(bucketName)
     .getBlockBlobClient(fileName)
@@ -68,7 +66,7 @@ const getBlobStream = ({ blobServiceClient }) => async (
   return {
     stream: readableStreamBody,
     contentType,
-    contentEncoding
+    contentEncoding,
   };
 };
 
@@ -87,14 +85,25 @@ const uploadJsonBlob = ({ blobServiceClient }) => (
     .upload(data, data.length);
 };
 
-module.exports = connectionString =>
+const uploadFileBlob = ({ blobServiceClient }) => (
+  container,
+  blobName,
+  filePath
+) =>
+  blobServiceClient
+    .getContainerClient(container)
+    .getBlockBlobClient(blobName)
+    .uploadFile(filePath);
+
+module.exports = (connectionString) =>
   applySpec({
     downloadFileAsJson,
     getSignedUrl,
     createWriteStream,
     uploadJsonBlob,
-    getBlobStream
+    uploadFileBlob,
+    getBlobStream,
   })({
     blobService: azure.createBlobService(connectionString),
-    blobServiceClient: BlobServiceClient.fromConnectionString(connectionString)
+    blobServiceClient: BlobServiceClient.fromConnectionString(connectionString),
   });
