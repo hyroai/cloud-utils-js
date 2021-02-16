@@ -1,9 +1,9 @@
 language: node_js
 node_js:
-- lts/*
-before_deploy: "npm run build"
+  - lts/*
 deploy:
   provider: npm
+  skip_cleanup: true
   email: davidstrouk@gmail.com
   api_key:
     secure: cbEiIEBvB3iXRCD/8gKyHNMLA+Env2ChJ16NzG4ClhNMSs2EpqMWzogNcsJpxwqEStCh7+hoVtTTPsvK2L8sQ8TJi3PWbaYDaZRJ757Fhpm6yFfxbCSiNKiRrfqvTNYSNGPPXELRJQrTV44RSePbFFWXrYAkHX8EzdzHs4Dc5y4Kdd9ghtAy3guJF59QrnjPSt8E+kJm6rrbROxba4ZdZzyrGpWzBIECJssrnF+FnNXk8X6nqr5UJPlQvkigTiA1Dv6qEqNGE1EUYwFULXpChrK2eiIOXilO2Q9HqL0o2mZWzvtoqm6ilzTpdKTZzL0r0olxWC2kuit+ZViLkVwYIiqskbBskofW0MkfVuZBX1PUYMEsgTh9CXNk+ERxMvJZwjsLDDgC4vmwClCkpq4E5a9/FDtkl09UhOiB80j3F3I+awmgXvl4QEAQeodJcPCPvRwLa4o5v+E9/Cdys5s5n4ggcfH6jlxbK+vyixh7IuY0pwWbepRZ3KePl7PInUeFKp3BnL83gLZ3eRxIQMmvKF0YxYTM+DV0R1Ex4teBL7C/sCVmBHqTHWFYMQn6i7td9B5BhdRNgGNY5xa2zX6Ob+bV7XdjmFKE6qrVDVyXGSGQWtFrZcPEaiI0JW+8u3O9VnHw21p9nqgkYmUoKI2Tlmk3nXzIpNKr4l4eX1Vq6UE=
