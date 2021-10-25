@@ -30,18 +30,15 @@ const vaultAuthPayload = curry((jwt, computeData) => ({
 }));
 
 const vaultHeaders = withCacheAsync(
-  async () => {
-    const jwt = await identityToken();
-    const token = await asyncPipe(
+  async () => ({
+    "X-Vault-Token": await asyncPipe(
       path(["compute"]),
-      vaultAuthPayload(jwt),
+      vaultAuthPayload(await identityToken()),
       async (payload) =>
         (await axios.post(`${baseVaultUrl}/auth/azure/login`, payload)).data,
       path(["auth", "client_token"])
-    )(await instanceMetadata());
-
-    return { "X-Vault-Token": token };
-  },
+    )(await instanceMetadata()),
+  }),
   { stdTTL: 23 * 60 * 60 } // Vault token is valid for 24 hour.
 );
 
