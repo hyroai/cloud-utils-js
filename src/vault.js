@@ -13,7 +13,7 @@ const identityToken = asyncPipe(
       { headers: { Metadata: "true" } }
     ),
   path(["data", "access_token"])
-)();
+);
 
 const instanceMetadata = asyncPipe(
   () =>
