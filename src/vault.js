@@ -1,33 +1,38 @@
 const axios = require("axios");
 const { path, curry } = require("ramda");
 const { asyncPipe, withCacheAsync } = require("gamlajs").default;
+const config = require("config");
 
-const baseVaultUrl = `${process.env.VAULT_HOST}/v1`;
+const baseVaultUrl = `${config.get("vault.host")}/v1`;
 const baseMetadataUrl = "http://169.254.169.254/metadata";
 
-const identityToken = async () =>
-  (
-    await axios.get(
+const identityToken = () =>
+  asyncPipe(
+    axios.get(
       `${baseMetadataUrl}/identity/oauth2/token?api-version=2018-02-01&resource=https%3A%2F%2Fmanagement.azure.com%2F`,
       { headers: { Metadata: "true" } }
-    )
-  ).data.access_token;
+    ),
+    path(["data", "access_token"])
+  )();
 
-const instanceMetadata = async () =>
-  (
-    await axios.get(`${baseMetadataUrl}/instance?api-version=2019-08-15`, {
+const instanceMetadata = () =>
+  asyncPipe(
+    axios.get(`${baseMetadataUrl}/instance?api-version=2019-08-15`, {
       headers: { Metadata: "true" },
-    })
-  ).data;
+    }),
+    path(["data"])
+  );
 
-const vaultAuthPayload = curry((jwt, computeData) => ({
-  role: process.env.ROLE || `${process.env.VAULT_KEY}-role`,
-  jwt,
-  subscription_id: computeData.subscriptionId,
-  resource_group_name: computeData.resourceGroupName,
-  vm_name: computeData.name,
-  vmss_name: computeData.vmScaleSetName,
-}));
+const vaultAuthPayload = curry(
+  (jwt, { subscriptionId, resourceGroupName, name, vmScaleSetName }) => ({
+    role: config.get("vault.role") || `${config.get("vault.env")}-role`,
+    jwt,
+    subscription_id: subscriptionId,
+    resource_group_name: resourceGroupName,
+    vm_name: name,
+    vmss_name: vmScaleSetName,
+  })
+);
 
 const vaultHeaders = withCacheAsync(
   async () => ({
