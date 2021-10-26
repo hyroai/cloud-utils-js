@@ -6,22 +6,22 @@ const config = require("./config");
 const baseVaultUrl = `${config.vault.host}/v1`;
 const baseMetadataUrl = "http://169.254.169.254/metadata";
 
-const identityToken = () =>
-  asyncPipe(
+const identityToken = asyncPipe(
+  () =>
     axios.get(
       `${baseMetadataUrl}/identity/oauth2/token?api-version=2018-02-01&resource=https%3A%2F%2Fmanagement.azure.com%2F`,
       { headers: { Metadata: "true" } }
     ),
-    path(["data", "access_token"])
-  )();
+  path(["data", "access_token"])
+)();
 
-const instanceMetadata = () =>
-  asyncPipe(
+const instanceMetadata = asyncPipe(
+  () =>
     axios.get(`${baseMetadataUrl}/instance?api-version=2019-08-15`, {
       headers: { Metadata: "true" },
     }),
-    path(["data"])
-  );
+  path(["data"])
+);
 
 const vaultAuthPayload = curry(
   (jwt, { subscriptionId, resourceGroupName, name, vmScaleSetName }) => ({
