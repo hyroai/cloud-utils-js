@@ -1,9 +1,9 @@
 const axios = require("axios");
 const { path, curry } = require("ramda");
 const { asyncPipe, withCacheAsync } = require("gamlajs").default;
-const config = require("config");
+const config = require("./config");
 
-const baseVaultUrl = `${config.get("vault.host")}/v1`;
+const baseVaultUrl = `${config.vault.host}/v1`;
 const baseMetadataUrl = "http://169.254.169.254/metadata";
 
 const identityToken = () =>
@@ -25,7 +25,7 @@ const instanceMetadata = () =>
 
 const vaultAuthPayload = curry(
   (jwt, { subscriptionId, resourceGroupName, name, vmScaleSetName }) => ({
-    role: config.get("vault.role") || `${config.get("vault.env")}-role`,
+    role: config.vault.role || `${config.vault.env}-role`,
     jwt,
     subscription_id: subscriptionId,
     resource_group_name: resourceGroupName,

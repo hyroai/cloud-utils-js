@@ -1,7 +1,0 @@
-{
-  "vault" : {
-    "host": "http://vault.vault:8200",
-    "env": "VAULT_KEY",
-    "role": "VAULT_ROLE"
-  }
-}

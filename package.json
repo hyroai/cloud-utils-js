@@ -28,7 +28,6 @@
     "aws-sdk": "^2.717.0",
     "axios": "^0.23.0",
     "azure-storage": "^2.10.3",
-    "config": "^3.3.6",
     "gamlajs": "0.0.30",
     "moment": "^2.29.1",
     "ramda": "^0.27.1"

@@ -1,7 +1,0 @@
-{
-  "vault" : {
-    "host": "VAULT_HOST",
-    "env": "VAULT_KEY",
-    "role": "VAULT_ROLE"
-  }
-}
