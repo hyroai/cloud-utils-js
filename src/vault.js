@@ -32,17 +32,18 @@ const vaultAuthPayload = curry(
   })
 );
 
-const podIdentityToken = withCacheAsync(
-  async (baseVaultUrl, role) =>
-    asyncPipe(
-      path(["compute"]),
-      vaultAuthPayload(await identityToken(), role),
-      async (payload) =>
-        (await axios.post(`${baseVaultUrl}/auth/azure/login`, payload)).data,
-      path(["auth", "client_token"])
-    )(await instanceMetadata()),
-  { stdTTL: 23 * 60 * 60 } // Vault token is valid for 24 hour.
-);
+const podIdentityToken = (baseVaultUrl, role) =>
+  withCacheAsync(
+    async () =>
+      asyncPipe(
+        path(["compute"]),
+        vaultAuthPayload(await identityToken(), role),
+        async (payload) =>
+          (await axios.post(`${baseVaultUrl}/auth/azure/login`, payload)).data,
+        path(["auth", "client_token"])
+      )(await instanceMetadata()),
+    { stdTTL: 23 * 60 * 60 } // Vault token is valid for 24 hour.
+  );
 
 const vaultHeaders = (tokenGetter) => async () => ({
   "X-Vault-Token": await tokenGetter(),
