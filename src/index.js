@@ -1,3 +1,4 @@
 import storage from "./storage/storage";
+import vault from "./vault";
 
-export { storage };
+export { storage, vault };
