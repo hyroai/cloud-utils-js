@@ -1,9 +1,7 @@
 const axios = require("axios");
-const { path, curry } = require("ramda");
+const { path, curry, applySpec } = require("ramda");
 const { asyncPipe, withCacheAsync } = require("gamlajs").default;
-const config = require("./config");
 
-const baseVaultUrl = `${config.vault.host}/v1`;
 const baseMetadataUrl = "http://169.254.169.254/metadata";
 
 const identityToken = asyncPipe(
@@ -24,8 +22,8 @@ const instanceMetadata = asyncPipe(
 );
 
 const vaultAuthPayload = curry(
-  (jwt, { subscriptionId, resourceGroupName, name, vmScaleSetName }) => ({
-    role: config.vault.role || `${config.vault.env}-role`,
+  (jwt, role, { subscriptionId, resourceGroupName, name, vmScaleSetName }) => ({
+    role,
     jwt,
     subscription_id: subscriptionId,
     resource_group_name: resourceGroupName,
@@ -34,31 +32,43 @@ const vaultAuthPayload = curry(
   })
 );
 
-const vaultHeaders = withCacheAsync(
-  async () => ({
-    "X-Vault-Token": await asyncPipe(
+const podIdentityToken = withCacheAsync(
+  async (baseVaultUrl, role) =>
+    asyncPipe(
       path(["compute"]),
-      vaultAuthPayload(await identityToken()),
+      vaultAuthPayload(await identityToken(), role),
       async (payload) =>
         (await axios.post(`${baseVaultUrl}/auth/azure/login`, payload)).data,
       path(["auth", "client_token"])
     )(await instanceMetadata()),
-  }),
   { stdTTL: 23 * 60 * 60 } // Vault token is valid for 24 hour.
 );
 
-const readKey = async (path) =>
+const vaultHeaders = (tokenGetter) => async () => ({
+  "X-Vault-Token": await tokenGetter(),
+});
+
+const readKey = ({ baseVaultUrl, headersGetter }) => async (path) =>
   (
     await axios.get(`${baseVaultUrl}/secret/data/${path}`, {
-      headers: await vaultHeaders(),
+      headers: await headersGetter(),
     })
   ).data.data;
 
-const writeKey = async (path, value) =>
+const writeKey = ({ baseVaultUrl, headersGetter }) => async (path, value) =>
   axios.post(
     `${baseVaultUrl}/secret/data/${path}`,
     { data: value },
-    { headers: await vaultHeaders() }
+    { headers: await headersGetter() }
   );
 
-module.exports = { readKey, writeKey };
+module.exports = (host, role, token) =>
+  applySpec({
+    readKey,
+    writeKey,
+  })({
+    baseVaultUrl: `${host}/v1`,
+    headersGetter: vaultHeaders(
+      token ? () => token : podIdentityToken(`${host}/v1`, role)
+    ),
+  });
