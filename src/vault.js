@@ -1,5 +1,5 @@
 const axios = require("axios");
-const { path, curry, applySpec } = require("ramda");
+const { path, curry, applySpec, mergeRight } = require("ramda");
 const { asyncPipe, withCacheAsync } = require("gamlajs").default;
 
 const baseMetadataUrl = "http://169.254.169.254/metadata";
@@ -61,13 +61,19 @@ const writeKey = ({ baseVaultUrl, headersGetter }) => async (path, value) =>
     { headers: await headersGetter() }
   );
 
-module.exports = (host, role, token) =>
-  applySpec({
-    readKey,
-    writeKey,
-  })({
-    baseVaultUrl: `${host}/v1`,
-    headersGetter: vaultHeaders(
-      token ? () => token : podIdentityToken(`${host}/v1`, role)
-    ),
-  });
+const updateKey = ({ readKey, writeKey }) => async (path, value) =>
+  writeKey(path, mergeRight(await readKey(path), value));
+
+module.exports = (host, role, token) => ({
+  updateKey: updateKey(
+    applySpec({
+      readKey,
+      writeKey,
+    })({
+      baseVaultUrl: `${host}/v1`,
+      headersGetter: vaultHeaders(
+        token ? () => token : podIdentityToken(`${host}/v1`, role)
+      ),
+    })
+  ),
+});
