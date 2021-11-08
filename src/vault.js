@@ -61,8 +61,13 @@ const writeKey = ({ baseVaultUrl, headersGetter }) => async (path, value) =>
     { headers: await headersGetter() }
   );
 
-const updateKey = ({ readKey, writeKey }) => async (path, value) =>
-  writeKey(path, mergeRight(await readKey(path), value));
+const updateKey = ({ readKey, writeKey }) => async (path, value) => {
+  try {
+    return writeKey(path, mergeRight(await readKey(path), value));
+  } catch (e) {
+    return writeKey(path, value);
+  }
+};
 
 module.exports = (host, role, token) => ({
   updateKey: updateKey(
