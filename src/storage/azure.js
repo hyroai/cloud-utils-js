@@ -50,6 +50,34 @@ const downloadFileAsJson = ({ blobServiceClient }) => async (
   }
 };
 
+const downloadFileAsString = ({ blobServiceClient }) => async (
+    bucketName,
+    fileName
+) => {
+    const downloadResponse = await blobServiceClient
+        .getContainerClient(bucketName)
+        .getBlockBlobClient(fileName)
+        .download(0);
+    try {
+        return await streamToString(
+            downloadResponse.readableStreamBody
+        )
+    } catch (e) {
+        return Promise.reject("Could not stringify blob");
+    }
+};
+
+const getBlobProperties = ({ blobServiceClient }) => async (
+    bucketName,
+    fileName
+) => {
+    const properties = await blobServiceClient
+        .getContainerClient(bucketName)
+        .getBlockBlobClient(fileName)
+        .getProperties();
+    return properties;
+};
+
 const getBlobStream = ({ blobServiceClient }) => async (
   bucketName,
   fileName
@@ -98,6 +126,8 @@ const uploadFileBlob = ({ blobServiceClient }) => (
 module.exports = (connectionString) =>
   applySpec({
     downloadFileAsJson,
+    downloadFileAsString,
+    getBlobProperties,
     getSignedUrl,
     createWriteStream,
     uploadJsonBlob,
