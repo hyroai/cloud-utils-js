@@ -38,40 +38,35 @@ const downloadFileAsJson = ({ blobServiceClient }) => async (
   fileName
 ) => {
   try {
-    return await downloadFileAsString({blobServiceClient})(bucketName, fileName)
-        .then((data) => JSON.parse(data));
+    return await downloadFileAsString({ blobServiceClient })(
+      bucketName,
+      fileName
+    ).then((data) => JSON.parse(data));
   } catch (e) {
     return Promise.reject("File is not in JSON format");
   }
 };
 
 const downloadFileAsString = ({ blobServiceClient }) => async (
-    bucketName,
-    fileName
+  bucketName,
+  fileName
 ) => {
-    const downloadResponse = await blobServiceClient
-        .getContainerClient(bucketName)
-        .getBlockBlobClient(fileName)
-        .download(0);
-    try {
-        return await streamToString(
-            downloadResponse.readableStreamBody
-        )
-    } catch (e) {
-        return Promise.reject("Could not stringify blob");
-    }
+  const downloadResponse = await blobServiceClient
+    .getContainerClient(bucketName)
+    .getBlockBlobClient(fileName)
+    .download(0);
+  try {
+    return await streamToString(downloadResponse.readableStreamBody);
+  } catch (e) {
+    return Promise.reject("Could not stringify blob");
+  }
 };
 
-const getBlobProperties = ({ blobServiceClient }) => async (
-    bucketName,
-    fileName
-) => {
-    const properties = await blobServiceClient
-        .getContainerClient(bucketName)
-        .getBlockBlobClient(fileName)
-        .getProperties();
-    return properties;
-};
+const getBlobProperties = ({ blobServiceClient }) => (bucketName, fileName) =>
+  blobServiceClient
+    .getContainerClient(bucketName)
+    .getBlockBlobClient(fileName)
+    .getProperties();
 
 const getBlobStream = ({ blobServiceClient }) => async (
   bucketName,
