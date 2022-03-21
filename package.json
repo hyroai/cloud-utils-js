@@ -23,23 +23,23 @@
   },
   "homepage": "https://github.com/hyroai/cloud-utils-js/",
   "dependencies": {
-    "@azure/storage-blob": "^12.2.0-preview.1",
-    "@google-cloud/storage": "^5.1.2",
-    "aws-sdk": "^2.717.0",
-    "axios": "^0.23.0",
-    "azure-storage": "^2.10.3",
-    "gamlajs": "0.0.30",
+    "@azure/storage-blob": "^12.9.0",
+    "@google-cloud/storage": "^5.18.2",
+    "aws-sdk": "^2.1096.0",
+    "axios": "^0.26.1",
+    "azure-storage": "^2.10.7",
+    "gamlajs": "^0.0.33",
     "moment": "^2.29.1",
-    "ramda": "^0.27.1"
+    "ramda": "^0.28.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.8.3",
-    "@babel/core": "^7.8.3",
-    "@babel/preset-env": "^7.8.3",
-    "eslint": "^7.9.0",
-    "eslint-plugin-import": "^2.22.0",
-    "eslint-plugin-jest": "^24.0.2",
-    "jest": "^25.1.0",
-    "prettier": "^1.19.1"
+    "@babel/cli": "^7.17.6",
+    "@babel/core": "^7.17.8",
+    "@babel/preset-env": "^7.16.11",
+    "eslint": "^8.11.0",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-jest": "^26.1.2",
+    "jest": "^27.5.1",
+    "prettier": "^2.6.0"
   }
 }
