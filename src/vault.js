@@ -47,27 +47,33 @@ const vaultHeaders = (tokenGetter) => async () => ({
   "X-Vault-Token": await tokenGetter(),
 });
 
-const readKey = ({ baseVaultUrl, headersGetter }) => async (path) =>
-  getResultPath(`${baseVaultUrl}/secret/data/${path}`, await headersGetter(), [
-    "data",
-    "data",
-    "data",
-  ])();
+const readKey =
+  ({ baseVaultUrl, headersGetter }) =>
+  async (path) =>
+    getResultPath(
+      `${baseVaultUrl}/secret/data/${path}`,
+      await headersGetter(),
+      ["data", "data", "data"]
+    )();
 
-const writeKey = ({ baseVaultUrl, headersGetter }) => async (path, value) =>
-  axios.post(
-    `${baseVaultUrl}/secret/data/${path}`,
-    { data: value },
-    { headers: await headersGetter() }
-  );
+const writeKey =
+  ({ baseVaultUrl, headersGetter }) =>
+  async (path, value) =>
+    axios.post(
+      `${baseVaultUrl}/secret/data/${path}`,
+      { data: value },
+      { headers: await headersGetter() }
+    );
 
-const updateKey = ({ readKey, writeKey }) => async (path, value) => {
-  try {
-    return writeKey(path, mergeRight(await readKey(path), value));
-  } catch (e) {
-    return writeKey(path, value);
-  }
-};
+const updateKey =
+  ({ readKey, writeKey }) =>
+  async (path, value) => {
+    try {
+      return writeKey(path, mergeRight(await readKey(path), value));
+    } catch (e) {
+      return writeKey(path, value);
+    }
+  };
 
 module.exports = (host, role, token) => ({
   updateKey: updateKey(
