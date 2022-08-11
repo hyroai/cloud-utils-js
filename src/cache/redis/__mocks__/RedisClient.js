@@ -3,7 +3,7 @@ const { promisifyRedisClient } = require("../utils");
 
 const redisClient = redisMock.createClient();
 
-module.exports = {
+module.exports = () => ({
   ...promisifyRedisClient(redisClient),
   makeNewRedisClient: () => redisMock.createClient(),
-};
+});
