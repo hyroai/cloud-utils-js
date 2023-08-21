@@ -1,9 +1,7 @@
+dist: focal
 language: node_js
 node_js:
   - lts/*
-before_install:
-  - wget https://ftp.gnu.org/gnu/glibc/glibc-2.27.tar.gz
-  - tar xzf glibc-2.27.tar.gz
 before_deploy: "npm run build"
 deploy:
   provider: npm
