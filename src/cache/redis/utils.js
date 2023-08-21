@@ -2,7 +2,6 @@ const { asyncPipe, withCacheAsyncCustom } = require("gamlajs").default;
 const { unless, isEmpty } = require("ramda");
 const { distributedLock } = require("./locking");
 
-
 const cacheApiResources = (redisClient) => (
   argsToLockId,
   lockIdToKey,
