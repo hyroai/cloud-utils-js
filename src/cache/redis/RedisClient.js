@@ -1,13 +1,12 @@
 const redis = require("redis");
-const { cacheApiResources, promisifyRedisClient } = require("./utils");
+const { cacheApiResources } = require("./utils");
 
 const makeNewRedisClient = (redisConfig) => redis.createClient(redisConfig);
 
-module.exports = (redisConfig) => {
-  const redisClient = promisifyRedisClient(makeNewRedisClient(redisConfig));
+const createRedisClient = (redisConfig) => {
+  const redisClient = makeNewRedisClient(redisConfig);
 
   redisClient.on("ready", () => console.log("Redis client connected"));
-
   redisClient.on("error", (err) => console.error("Redis client error", err));
 
   return {
@@ -16,3 +15,5 @@ module.exports = (redisConfig) => {
     makeNewRedisClient,
   };
 };
+
+module.exports = createRedisClient;
