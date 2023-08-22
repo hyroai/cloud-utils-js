@@ -1,7 +1,7 @@
 const redisMock = require("redis-mock");
-const { cacheApiResources, promisifyRedisClient } = require("../utils");
+const { cacheApiResources } = require("../utils");
 
-const redisClient = promisifyRedisClient(redisMock.createClient());
+const redisClient = redisMock.createClient();
 
 module.exports = () => ({
   redisClient,
