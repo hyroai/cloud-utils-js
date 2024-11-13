@@ -9,7 +9,7 @@ repos:
     rev: v7.9.0
     hooks:
       - id: eslint
-        entry: eslint --fix --ext js,jsx .
+        entry: eslint --fix .
         files: \.(js|jsx|md)$
         additional_dependencies:
           - eslint-plugin-sort-requires@latest
