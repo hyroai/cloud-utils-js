@@ -32,7 +32,9 @@
     "moment": "^2.29.1",
     "ramda": "^0.27.1",
     "redis": "^4.6.7",
-    "redis-mock": "^0.47.0"
+    "redis-mock": "^0.47.0",
+    "globals": "12.4.0",
+    "@eslint/eslintrc": "3.1.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.3",
